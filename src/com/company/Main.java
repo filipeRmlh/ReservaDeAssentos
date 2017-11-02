@@ -1,11 +1,21 @@
 package com.company;
+import java.io.IOException;
+import java.nio.file.*;
 
-import java.io.File;
 
 public class Main {
-
     public static void main(String[] args) {
-	    File log = new File(args[2]);
-	    ReservationSystem sys = new ReservationSystem(Integer.parseInt(args[1]),log);
+        Path p = Paths.get(args[0]);
+
+        if (!Files.exists(p, LinkOption.NOFOLLOW_LINKS)){
+            try {
+                Files.createFile(p);
+            }catch (IOException ex){
+                System.err.println("Erro ao criar arquivo de log");
+            }
+        }
+
+        ReservationSystem sys = new ReservationSystem(Integer.parseInt(args[1]),p);
+        sys.init();
     }
 }
