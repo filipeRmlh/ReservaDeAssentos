@@ -1,10 +1,40 @@
 package com.company;
 
 public class Monitor {
-    public void lockVisualizacao(){
-
+    boolean visualizando=false,alocando =false,liberando=false;
+    public synchronized void lockVisualiza() throws InterruptedException{
+        while(this.alocando||this.liberando){
+            this.wait();
+        }
+        System.out.println("visualizando");
+        this.visualizando=true;
     }
-    public void unlockVisualizacao(){
+    public synchronized void unlockVisualiza() throws InterruptedException{
+        this.visualizando=false;
 
+        this.notifyAll();
     }
+    public synchronized void lockAloca() throws InterruptedException{
+        while(this.visualizando){
+            this.wait();
+        }
+        System.out.println("alocando");
+        this.alocando=true;
+    }
+    public synchronized void unlockAloca() throws InterruptedException{
+        this.alocando=false;
+        this.notifyAll();
+    }
+    public synchronized void lockLibera() throws InterruptedException{
+        while(this.visualizando){
+            this.wait();
+        }
+        System.out.println("liberando");
+        this.liberando=true;
+    }
+    public synchronized void unlockLibera() throws InterruptedException{
+        this.liberando=false;
+        this.notifyAll();
+    }
+
 }
