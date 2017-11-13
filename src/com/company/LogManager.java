@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.nio.file.*;
 import java.util.Arrays;
 
-public class LogManager  {
+public class LogManager {
     private Path log;
     public LogManager(Path log){
         this.log=log;

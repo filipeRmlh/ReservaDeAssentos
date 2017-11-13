@@ -6,7 +6,7 @@ public class User extends Thread{
     protected Assentos assentos;
     private Semaphore semaphore;
     private  Monitor monitor;
-    private int myAssento=-1;
+    protected int myAssento=-1;
 
     User(int id,Assentos assentos,LogManager log, Semaphore semaphore, Monitor monitor){
       this.log=log;
@@ -33,13 +33,13 @@ public class User extends Thread{
 
     //***********************************************
 
-    public boolean alocaAssento(int assento){
+    public boolean alocaAssento(int assento){ //Assento dado
         boolean retorno = this.alocaAssentoMaster(assento);
         this.log.alocarAssentoDado(this.id,assento,this.assentos.assentos);
         return retorno;
     }
 
-    public boolean alocaAssento(Assentos assentos){
+    public boolean alocaAssento(Assentos assentos){ //Assento livre
         boolean retorno;
         for (int assento:assentos.assentos) {
             if(assento==0){
