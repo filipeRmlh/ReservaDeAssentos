@@ -2,6 +2,7 @@ package com.company;
 
 public class User extends Thread{
     public int id;
+    public int logOrder=-1;
     private LogManager log;
     protected Assentos assentos;
     private Semaphore semaphore;
@@ -35,16 +36,16 @@ public class User extends Thread{
 
     public boolean alocaAssento(int assento){ //Assento dado
         boolean retorno = this.alocaAssentoMaster(assento);
-        this.log.alocarAssentoDado(this.id,assento,this.assentos.assentos);
+        this.log.alocarAssentoDado(this,assento,this.assentos.assentos);
         return retorno;
     }
 
     public boolean alocaAssento(Assentos assentos){ //Assento livre
         boolean retorno;
-        for (int assento:assentos.assentos) {
-            if(assento==0){
-                retorno = this.alocaAssentoMaster(assento);
-                if(retorno)this.log.alocarAssentoLivre(this.id,assento,assentos.assentos);
+        for (int i=0;i<assentos.assentos.length;i++) {
+            if(assentos.assentos[i]==0){
+                retorno = this.alocaAssentoMaster(i);
+                if(retorno)this.log.alocarAssentoLivre(this,i,assentos.assentos);
                 return retorno;
             }
         }
@@ -53,7 +54,7 @@ public class User extends Thread{
     public synchronized int[] visualizaAssentos(Assentos assentos){
         try{
             this.monitor.lockVisualiza();
-            this.log.visualizarAssento(this.id,assentos.assentos);
+            this.log.visualizarAssento(this,assentos.assentos);
             this.monitor.unlockVisualiza();
             return assentos.assentos;
         }catch (InterruptedException doNothing){

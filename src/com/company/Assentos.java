@@ -1,5 +1,7 @@
 package com.company;
 
+import java.util.Arrays;
+
 public class Assentos {
     public int[] assentos;
     public User[] users;
@@ -9,6 +11,9 @@ public class Assentos {
         this.assentos = new int[numAssentos];
         this.users = new User[numAssentos];
         this.reservando=new boolean[numAssentos];
+        for(boolean reserva:this.reservando){
+            reserva=false;
+        }
     }
 
     public boolean setUser(User user, int assento) throws InterruptedException{
@@ -19,12 +24,7 @@ public class Assentos {
                         this.wait();
                     } else {
                         this.reservando[assento] = true;
-                        this.users[assento] = user;
-                        this.reservando[assento]=false;
-                        synchronized (this){
-                            this.notifyAll();
-                        }
-                        return true;
+                        break;
                     }
                 }
             }else{
@@ -32,6 +32,13 @@ public class Assentos {
             }
         }
 
+        this.assentos[assento]=user.id;
+        this.users[assento] = user;
+        this.reservando[assento]=false;
+        synchronized (this){
+            this.notifyAll();
+        }
+        return true;
 
     }
     public synchronized boolean clearUserId(int userId,int assento) throws InterruptedException{

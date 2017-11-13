@@ -6,19 +6,16 @@ public class Monitor {
         while(this.alocando||this.liberando){
             this.wait();
         }
-        System.out.println("visualizando");
         this.visualizando=true;
     }
     public synchronized void unlockVisualiza() throws InterruptedException{
         this.visualizando=false;
-
         this.notifyAll();
     }
     public synchronized void lockAloca() throws InterruptedException{
         while(this.visualizando){
             this.wait();
         }
-        System.out.println("alocando");
         this.alocando=true;
     }
     public synchronized void unlockAloca() throws InterruptedException{
@@ -29,7 +26,6 @@ public class Monitor {
         while(this.visualizando){
             this.wait();
         }
-        System.out.println("liberando");
         this.liberando=true;
     }
     public synchronized void unlockLibera() throws InterruptedException{

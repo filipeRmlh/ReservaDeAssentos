@@ -4,8 +4,12 @@ import java.io.IOException;
 import java.nio.file.*;
 import java.util.Arrays;
 
+
 public class LogManager {
     private Path log;
+    private int counterIn = 0;
+    private int counterOut = 0;
+
     public LogManager(Path log){
         this.log=log;
     }
@@ -13,39 +17,48 @@ public class LogManager {
         return Arrays.toString(assentos);
     }
 
-    public synchronized void visualizarAssento(int userId,int[] assentos){
+    public synchronized void visualizarAssento(User user,int[] assentos){
         int opcode = 1;
         String sAssentos = Arrays.toString(assentos);
-        this.logWrite("op"+opcode+"("+userId+","+sAssentos+")\n");
-        System.out.println("op"+opcode+"("+userId+","+sAssentos+")\n");
-
+//        System.out.println("op"+opcode+"("+user.id+","+sAssentos+")\n");
+        this.logWrite(user,"op"+opcode+"("+user.id+","+sAssentos+")\n");
     }
 
-    public synchronized void  alocarAssentoLivre(int userId, int assento, int[] assentos){
+    public synchronized void  alocarAssentoLivre(User user, int assento, int[] assentos){
         int opcode = 2;
         String sAssentos = this.arrayAssentos(assentos);
-        this.logWrite("op"+opcode+"("+userId+","+assento+","+sAssentos+")\n");
-        System.out.println("op"+opcode+"("+userId+","+assento+","+sAssentos+")\n");
+//        System.out.println("op"+opcode+"("+user.id+","+assento+","+sAssentos+")\n");
+        this.logWrite(user,"op"+opcode+"("+user.id+","+assento+","+sAssentos+")\n");
     }
 
-    public synchronized void  alocarAssentoDado(int userId, int assento, int[] assentos){
+    public synchronized void  alocarAssentoDado(User user, int assento, int[] assentos){
         int opcode = 3;
         String sAssentos = this.arrayAssentos(assentos);
-        this.logWrite("op"+opcode+"("+userId+","+assento+","+sAssentos+")");
+        this.logWrite(user,"op"+opcode+"("+user.id+","+assento+","+sAssentos+")");
     }
 
-    public synchronized void  liberarAssento(int userId, int assento, int[] assentos){
+    public synchronized void  liberarAssento(User user, int assento, int[] assentos){
         int opcode = 4;
         String sAssentos = this.arrayAssentos(assentos);
-        this.logWrite("op"+opcode+"("+userId+","+assento+","+sAssentos+")");
+        this.logWrite(user,"op"+opcode+"("+user.id+","+assento+","+sAssentos+")");
     }
 
-    public synchronized boolean logWrite(String comand){
+
+    public synchronized boolean logWrite(User user,String comand){
         try {
+            while ((user.logOrder!=this.counterOut)&&(this.counterOut<this.counterIn)){
+                user.logOrder = this.counterIn++;
+                wait();
+            }
+            this.counterOut++;
+            user.logOrder = -1;
             Files.write(this.log,comand.getBytes(),StandardOpenOption.APPEND);
+            notifyAll();
             return true;
         }catch (IOException ex){
             ex.printStackTrace();
+            return false;
+        }catch (InterruptedException ex){
             return false;
         }
     }
