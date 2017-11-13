@@ -3,24 +3,27 @@ package com.company;
 public class User extends Thread{
     public int id;
     private LogManager log;
-    protected Assento[] assentos;
+    protected Assentos assentos;
     private Semaphore semaphore;
+    private  Monitor monitor;
+    private int myAssento=-1;
 
-    private Assento myAssento;
-
-    User(int id,Assento[] assentos,LogManager log, Semaphore semaphore){
+    User(int id,Assentos assentos,LogManager log, Semaphore semaphore, Monitor monitor){
       this.log=log;
       this.id=id;
       this.assentos=assentos;
       this.semaphore = semaphore;
+      this.monitor=monitor;
     }
 
-    private boolean alocaAssentoMaster(Assento assento){
+    private synchronized boolean alocaAssentoMaster(int assento){
         boolean retorno;
         try {
+            this.monitor.lockAloca();
             this.semaphore.take();
-            retorno = assento.setUser(this);
+            retorno = assentos.setUser(this,assento);
             if(retorno)this.myAssento=assento;
+            this.monitor.unlockAloca();
             return retorno;
         }catch (InterruptedException ex){
             System.err.println("Erro ao alocar Assento dado");
@@ -30,38 +33,41 @@ public class User extends Thread{
 
     //***********************************************
 
-    public boolean alocaAssento(Assento assento){
+    public boolean alocaAssento(int assento){
         boolean retorno = this.alocaAssentoMaster(assento);
-        this.log.alocarAssentoDado(this.id,assento.id,this.assentos);
+        this.log.alocarAssentoDado(this.id,assento,this.assentos.assentos);
         return retorno;
     }
 
-    public boolean alocaAssento(Assento[] assentos){
+    public boolean alocaAssento(Assentos assentos){
         boolean retorno;
-        for (Assento assento:assentos) {
-            if(assento.getUser()==null){
+        for (int assento:assentos.assentos) {
+            if(assento==0){
                 retorno = this.alocaAssentoMaster(assento);
-                if(retorno)this.log.alocarAssentoLivre(this.id,assento.id,assentos);
+                if(retorno)this.log.alocarAssentoLivre(this.id,assento,assentos.assentos);
                 return retorno;
             }
         }
         return false;
     }
-    public int[] visualizaAssentos(Assento[] assentos){
-        int[] myassentos = new int[assentos.length];
-        for (int i=0;i<assentos.length;i++) {
-            int userId = assentos[i].getUser()==null?0:assentos[i].getUser().id;
-            myassentos[i]=userId;
+    public synchronized int[] visualizaAssentos(Assentos assentos){
+        try{
+            this.monitor.lockVisualiza();
+            this.log.visualizarAssento(this.id,assentos.assentos);
+            this.monitor.unlockVisualiza();
+            return assentos.assentos;
+        }catch (InterruptedException doNothing){
+            return assentos.assentos;
         }
-        this.log.visualizarAssento(this.id,myassentos);
-        return myassentos;
     }
-    public boolean liberaAssento(Assento assento){
+    public boolean liberaAssento(int assento){
         boolean retorno;
         try{
-            retorno = this.myAssento.clearUserId(this.id);
-            if(retorno)this.myAssento = null;
+            this.monitor.lockLibera();
+            retorno = this.assentos.clearUserId(this.id,assento);
+            if(retorno)this.myAssento = -1;
             this.semaphore.release();
+            this.monitor.unlockLibera();
             return retorno;
         }catch (InterruptedException ex){
             return false;
