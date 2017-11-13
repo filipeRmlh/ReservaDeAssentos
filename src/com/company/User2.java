@@ -5,7 +5,7 @@ public class User2 extends User {
 
     User2(int id, int assento,Assentos assentos,LogManager log, Semaphore semaphore, Monitor monitor){
         super(id,assentos,log, semaphore,monitor);
-        this.assento=5; //número arbitrário para o assento
+        this.assento=assento;
 
     }
     @Override
