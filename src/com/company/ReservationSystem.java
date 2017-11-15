@@ -23,9 +23,18 @@ public class ReservationSystem {
             User1 t2= new User1(2,this.assentos,this.log, this.semaphore, this.monitor);
             User1 t3= new User1(3,this.assentos,this.log, this.semaphore, this.monitor);
             User1 t4= new User1(4,this.assentos,this.log, this.semaphore, this.monitor);
+
+            User2 t5= new User2(5,1,this.assentos,this.log, this.semaphore, this.monitor);
+            User2 t6= new User2(6,1,this.assentos,this.log, this.semaphore, this.monitor);
+            User2 t7= new User2(7,0,this.assentos,this.log, this.semaphore, this.monitor);
+            User2 t8= new User2(8,3,this.assentos,this.log, this.semaphore, this.monitor);
             t1.start();
             t2.start();
             t3.start();
             t4.start();
+            t5.start();
+            t6.start();
+            t7.start();
+            t8.start();
     }
 }

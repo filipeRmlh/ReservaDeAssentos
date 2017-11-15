@@ -34,13 +34,13 @@ public class LogManager {
     public synchronized void  alocarAssentoDado(User user, int assento, int[] assentos){
         int opcode = 3;
         String sAssentos = this.arrayAssentos(assentos);
-        this.logWrite(user,"op"+opcode+"("+user.id+","+assento+","+sAssentos+")");
+        this.logWrite(user,"op"+opcode+"("+user.id+","+assento+","+sAssentos+")\n");
     }
 
     public synchronized void  liberarAssento(User user, int assento, int[] assentos){
         int opcode = 4;
         String sAssentos = this.arrayAssentos(assentos);
-        this.logWrite(user,"op"+opcode+"("+user.id+","+assento+","+sAssentos+")");
+        this.logWrite(user,"op"+opcode+"("+user.id+","+assento+","+sAssentos+")\n");
     }
 
 

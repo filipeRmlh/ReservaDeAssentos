@@ -5,14 +5,16 @@ import java.util.Arrays;
 public class Assentos {
     public int[] assentos;
     public User[] users;
-    private boolean[] reservando;
+    private boolean[] reservando,liberando;
 
     Assentos(int numAssentos){
         this.assentos = new int[numAssentos];
         this.users = new User[numAssentos];
         this.reservando=new boolean[numAssentos];
-        for(boolean reserva:this.reservando){
-            reserva=false;
+        this.liberando=new boolean[numAssentos];
+        for(int i = 0;i<numAssentos;i++){
+            reservando[i]=false;
+            liberando[i]=false;
         }
     }
 
@@ -39,15 +41,29 @@ public class Assentos {
             this.notifyAll();
         }
         return true;
-
     }
-    public synchronized boolean clearUserId(int userId,int assento) throws InterruptedException{
-        if((this.users[assento]!=null)&&(this.assentos[assento] == userId)){
-            this.users[assento]=null;
-            this.assentos[assento]=0;
-            this.reservando[assento]=false;
-            return true;
+
+    public synchronized boolean clearUser(int userId,int assento) throws InterruptedException{
+        while(true){
+            if((this.users[assento]!=null)&&(this.assentos[assento] == userId)){
+                synchronized (this) {
+                    if (this.liberando[assento]) {
+                        this.wait();
+                    } else {
+                        this.liberando[assento] = true;
+                        break;
+                    }
+                }
+            }else{
+                return false;
+            }
         }
-        return false;
+        this.assentos[assento]=0;
+        this.users[assento]=null;
+        this.liberando[assento]=false;
+        synchronized (this){
+            this.notifyAll();
+        }
+        return true;
     }
 }

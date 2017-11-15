@@ -63,11 +63,13 @@ public class User extends Thread{
     }
     public boolean liberaAssento(int assento){
         boolean retorno;
+        if(this.myAssento==-1)return false;
         try{
             this.monitor.lockLibera();
-            retorno = this.assentos.clearUserId(this.id,assento);
+            retorno = this.assentos.clearUser(this.id,assento);
             if(retorno)this.myAssento = -1;
             this.semaphore.release();
+            this.log.liberarAssento(this,assento,this.assentos.assentos);
             this.monitor.unlockLibera();
             return retorno;
         }catch (InterruptedException ex){
