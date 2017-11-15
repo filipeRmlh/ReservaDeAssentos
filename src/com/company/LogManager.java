@@ -10,8 +10,9 @@ public class LogManager {
     private int counterIn = 0;
     private int counterOut = 0;
 
-    public LogManager(Path log){
+    public LogManager(Path log,int numAssentos){
         this.log=log;
+        this.logInit(numAssentos);
     }
     public synchronized String  arrayAssentos(int[] assentos){
         return Arrays.toString(assentos);
@@ -46,7 +47,7 @@ public class LogManager {
     }
 
 
-    public synchronized boolean logWrite(User user,String comand){
+    public synchronized boolean logWrite(User user,String command){
         try {
             while ((user.logOrder!=this.counterOut)&&(this.counterOut<this.counterIn)){
                 user.logOrder = this.counterIn++;
@@ -54,13 +55,24 @@ public class LogManager {
             }
             this.counterOut++;
             user.logOrder = -1;
-            Files.write(this.log,comand.getBytes(),StandardOpenOption.APPEND);
+            Files.write(this.log,command.getBytes(),StandardOpenOption.APPEND);
             notifyAll();
             return true;
         }catch (IOException ex){
             ex.printStackTrace();
             return false;
         }catch (InterruptedException ex){
+            return false;
+        }
+    }
+    public synchronized boolean logInit(int numAssentos){
+        String command = "n = "+numAssentos+"\na = [0] * n\nr = [1,[]]\n";
+        try {
+            Files.write(this.log,command.getBytes());
+            notifyAll();
+            return true;
+        }catch (IOException ex){
+            ex.printStackTrace();
             return false;
         }
     }

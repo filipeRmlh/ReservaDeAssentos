@@ -1,7 +1,6 @@
 
 #n = numero de assentos
-n = 5 #numero temporario
-assento = [0] * n
+
 
 
 #Operacao de reserva de assento escolhido

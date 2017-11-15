@@ -7,7 +7,7 @@ public class ReservationSystem {
     public LogManager log;
 
     ReservationSystem(int numAssentos, Path file){
-        this.log=new LogManager(file);
+        this.log=new LogManager(file,numAssentos);
         this.assentos= new Assentos(numAssentos,this.log);
     }
     public void init(){
