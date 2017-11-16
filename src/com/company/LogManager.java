@@ -70,6 +70,7 @@ public class LogManager {
         String command = "from teste import *\nn = "+numAssentos+"\nb = [1,[0] * n]\n\n";
         try {
             Files.write(this.log,command.getBytes());
+            Files.copy(Paths.get("teste.py"), this.log);
             notifyAll();
             return true;
         }catch (IOException ex){
