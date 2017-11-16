@@ -25,18 +25,17 @@ public class ReservationSystem {
         for(int j = 0;j<NUMUSERS;j++){
             random = (int) (Math.random()*3)+1;
             if(random == 1){
-                this.users[j] = new User1(j,this.assentos);
+                this.users[j] = new User1(j+1,this.assentos);
                 num1++;
             }else if(random ==2){
                 random2 = (int) (Math.random()*this.NUMASSENTOS);
-                this.users[j] = new User2(5,random2,this.assentos);
+                this.users[j] = new User2(j+1,random2,this.assentos);
                 num2++;
             }else{
-                this.users[j] = new User3(9,this.assentos);
+                this.users[j] = new User3(j+1,this.assentos);
                 num3++;
             }
         }
-
         for(int j = 0;j<NUMUSERS;j++){
            this.users[j].start();
         }
