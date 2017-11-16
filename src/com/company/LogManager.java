@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.nio.file.*;
 import java.util.Arrays;
 
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+
 
 public class LogManager {
     private Path log;
@@ -67,10 +69,16 @@ public class LogManager {
         }
     }
     public synchronized boolean logInit(int numAssentos){
-        String command = "from teste import *\nn = "+numAssentos+"\nb = [1,[0] * n]\n\n";
+        String testName = "teste";
+        String logName = (this.log.getFileName().toString()+"").replace(".py","");
+        String command = "from "+testName+"_"+logName+" import *\nn = "+numAssentos+"\nb = [1,[0] * n]\n\n";
         try {
             Files.write(this.log,command.getBytes());
-            Files.copy(Paths.get("teste.py"), this.log);
+            Path c = Paths.get("teste_Model.py").toAbsolutePath();
+            String d = this.log.getParent().toAbsolutePath().toString()+"/"+testName+"_"+logName+".py";
+            Path destiny = Paths.get(d);
+            Files.copy(c, destiny,REPLACE_EXISTING);
+            Files.write(destiny,("\nimport "+logName+"\n").getBytes(),StandardOpenOption.APPEND);
             return true;
         }catch (IOException ex){
             ex.printStackTrace();
