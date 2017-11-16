@@ -4,7 +4,7 @@ package com.company;
 public class Assentos {
     public int[] assentos;
     public User[] users;
-    private boolean[] reservando,liberando;
+    private boolean[] reservando,liberando; // Array de variáveis de status para controle de concorrencia;
     private Monitor monitor;
     private Semaphore semaphore;
     private LogManager logManager;
@@ -35,7 +35,7 @@ public class Assentos {
         this.monitor.lockAlocaDado();
         while(true){
             if(this.assentos[assento]==0){
-                    if (this.reservando[assento]) {
+                    if (this.reservando[assento]) {//solução encontrada para que a thread não fique esperando o assento ser liberado... ela apenas retorna false sinalizando que não conseguiu
                         this.wait();
                     } else {
                         this.reservando[assento] = true;
@@ -63,7 +63,7 @@ public class Assentos {
         for(;i<this.assentos.length;i++){
             this.monitor.lockAlocaLivre();
             while (true) {
-                if (this.assentos[i] == 0) {
+                if (this.assentos[i] == 0) {//solução encontrada para que a thread não fique esperando o assento ser liberado... ela apenas da break e tenta outro assento
                     if (this.reservando[i]) {
                         this.wait();
                     } else {

@@ -2,7 +2,7 @@ package com.company;
 
 public class Monitor {
     boolean visualizando=false,alocandolivre =false,alocandodado =false,liberando=false;
-    public synchronized void lockVisualiza() throws InterruptedException{
+    public synchronized void lockVisualiza() throws InterruptedException{// se aloca ou libera, espera visualização
         while(this.alocandolivre||this.liberando||this.alocandodado){
             this.wait();
         }
@@ -12,7 +12,7 @@ public class Monitor {
         this.visualizando=false;
         this.notifyAll();
     }
-    public synchronized void lockAlocaLivre() throws InterruptedException{
+    public synchronized void lockAlocaLivre() throws InterruptedException{// se visualiza ou alocaDado, espera alocaçãoLivre
         while(this.visualizando||this.alocandodado){
             this.wait();
         }
@@ -23,7 +23,7 @@ public class Monitor {
         this.alocandolivre=false;
         this.notifyAll();
     }
-    public synchronized void lockAlocaDado() throws InterruptedException{
+    public synchronized void lockAlocaDado() throws InterruptedException{// se visualiza ou alocaLivre, espera alocaçãoDada
         while(this.visualizando||this.alocandolivre){
             this.wait();
         }
@@ -34,7 +34,7 @@ public class Monitor {
         this.alocandodado=false;
         this.notifyAll();
     }
-    public synchronized void lockLibera() throws InterruptedException{
+    public synchronized void lockLibera() throws InterruptedException{//se visualiza, espera liberação;
         while(this.visualizando){
             this.wait();
         }

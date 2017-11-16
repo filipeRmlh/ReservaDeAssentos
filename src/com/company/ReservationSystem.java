@@ -3,11 +3,11 @@ package com.company;
 import java.nio.file.*;
 
 public class ReservationSystem {
-    public Assentos assentos;
-    public LogManager log;
-    public User[] users;
-    public int NUMUSERS = 12;
-    public int NUMASSENTOS;
+    public Assentos assentos;//objeto contendo lista de assentos e metodos relacionados
+    public LogManager log;// classe que interage com o arquivo de log
+    public User[] users;// array contendo as threads de usuário;
+    public int NUMUSERS = 12;//constante com o número de usuários a serem gerados;
+    public int NUMASSENTOS;// numero de assentos pegos pelo parâmetro do programa
 
     ReservationSystem(int numAssentos, Path file){
         this.users = new User[this.NUMUSERS];
@@ -15,7 +15,7 @@ public class ReservationSystem {
         this.log=new LogManager(file,numAssentos);
         this.assentos= new Assentos(numAssentos,this.log);
     }
-    public void init(){
+    public void init(){//popula os assentos cria as threads de usuário
         for(int i=0;i<this.assentos.assentos.length;i++){ //populando o array com objetos Assento
             this.assentos.assentos[i]=0;
         }

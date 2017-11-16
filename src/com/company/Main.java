@@ -4,7 +4,7 @@ import java.nio.file.*;
 
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) {//A main serve apenas para parsear os argumentos do programa e instanciar o sistema de Reserva.
         Path p = Paths.get(args[0]);
 
         if (!Files.exists(p, LinkOption.NOFOLLOW_LINKS)){

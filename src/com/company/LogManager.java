@@ -78,6 +78,11 @@ public class LogManager {
         }
     }
     public synchronized boolean logInit(int numAssentos){
+        /*
+            Esta função verifica se o log no path dado existe e se não existe, cria;
+            ela pega o template de teste chamado 'teste_Model.py' , e copia pro mesmo diretorio do log criado com o nome '<<variável_testeName>>_<<Nome_do_arquivo_de_log>>.py'
+            no arquivo '<<variável_testeName>>_<<Nome_do_arquivo_de_log>>.py' criado é inserido o número de assentos e o import do log;
+         */
         String testName = "teste";
         String logName = (this.log.getFileName().toString()+"").replace(".py","");
         String command = "from "+testName+"_"+logName+" import *\ninit("+numAssentos+")\n\n";
