@@ -1,45 +1,46 @@
-
-#n = numero de assentos
-
-
-
 #Operacao de reserva de assento escolhido
-def op1 (a, u, p):
-    if a[p-1] == 0:
-        a[p-1] = u
+def op3 (u, p, l, b):
+    temp = b[1]
+    if temp[p-1] == 0:
+        temp[p-1] = u
+        teste (l, temp, b)
     else:
         print ('Assento reservado por outro usuario')
 
 
 #Operacao de reserva de assento randomico
-def op2 (a, u, pr):
-    for i in xrange(len(a)):
-        if a[i] == 0:
+def op2 (u, pr, l, b):
+    temp = b[1]
+    for i in xrange(len(temp)):
+        if temp[i] == 0:
+            op3(u, pr, l, b)
             break
-        elif i == len(a):
+        elif i == len(temp):
             print ('Nao ha assentos disponiveis')
-    op1(a,u,pr)
+    
 
     
 #Operacao de liberacao de assento
-def op3 (a, u, p):
-    if a[p-1] == u:
-        a[p-1] = 0
+def op4 (u, p, l, b):
+    temp = b[1]
+    if temp[p-1] == u:
+        temp[p-1] = 0
+        teste (l,temp,b)
     else:
         print ('Impossivel liberar assento. Assento reservado por outro usuario')
 
 
 #Operacao de visualizacao de assentos
-def op4 (a,u):
-    print (a)
+def op1 (u, l, b):
+    teste (l,b)
 
 
 #Verificao de log
-def teste (a,r):
-    res = r[1]
-    for i in xrange(len(a)):
-        if a[i] != res[i]:
+def teste (l,res, b):
+    for i in xrange(len(l)):
+        if l[i] != res[i]:
             raise ValueError('Ocorreu um erro durante a execucao. Logs inconsistentes!', r[0])
-    r[0]+=1
+    b[0]+=1
+    b[1] = res
 
 import Log

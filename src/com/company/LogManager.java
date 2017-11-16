@@ -14,6 +14,7 @@ public class LogManager {
         this.log=log;
         this.logInit(numAssentos);
     }
+    
     public synchronized String  arrayAssentos(int[] assentos){
         return Arrays.toString(assentos);
     }
@@ -22,28 +23,28 @@ public class LogManager {
         int opcode = 1;
         String sAssentos = Arrays.toString(assentos);
 //        System.out.println("op"+opcode+"("+user.id+","+sAssentos+")\n");
-        this.logWrite(user,"op"+opcode+"("+user.id+","+sAssentos+")\n");
+        this.logWrite(user,"op"+opcode+"("+user.id+","+sAssentos+", b)\n");
     }
 
     public synchronized void  alocarAssentoLivre(User user, int assento, int[] assentos){
         int opcode = 2;
         String sAssentos = this.arrayAssentos(assentos);
 //        System.out.println("op"+opcode+"("+user.id+","+assento+","+sAssentos+")\n");
-        this.logWrite(user,"op"+opcode+"("+user.id+","+assento+","+sAssentos+")\n");
+        this.logWrite(user,"op"+opcode+"("+user.id+","+assento+","+sAssentos+", b)\n");
     }
 
     public synchronized void  alocarAssentoDado(User user, int assento, int[] assentos){
         int opcode = 3;
         String sAssentos = this.arrayAssentos(assentos);
 //        System.out.println("op"+opcode+"("+user.id+","+assento+","+sAssentos+")\n");
-        this.logWrite(user,"op"+opcode+"("+user.id+","+assento+","+sAssentos+")\n");
+        this.logWrite(user,"op"+opcode+"("+user.id+","+assento+","+sAssentos+", b)\n");
     }
 
     public synchronized void  liberarAssento(User user, int assento, int[] assentos){
         int opcode = 4;
         String sAssentos = this.arrayAssentos(assentos);
 //        System.out.println("op"+opcode+"("+user.id+","+assento+","+sAssentos+")\n");
-        this.logWrite(user,"op"+opcode+"("+user.id+","+assento+","+sAssentos+")\n");
+        this.logWrite(user,"op"+opcode+"("+user.id+","+assento+","+sAssentos+", b)\n");
     }
 
 
@@ -66,7 +67,7 @@ public class LogManager {
         }
     }
     public synchronized boolean logInit(int numAssentos){
-        String command = "n = "+numAssentos+"\na = [0] * n\nr = [1,[]]\n";
+        String command = "from teste import *\nn = "+numAssentos+"\nb = [1,[0] * n]\n\n";
         try {
             Files.write(this.log,command.getBytes());
             notifyAll();
