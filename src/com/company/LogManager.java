@@ -71,7 +71,6 @@ public class LogManager {
         try {
             Files.write(this.log,command.getBytes());
             Files.copy(Paths.get("teste.py"), this.log);
-            notifyAll();
             return true;
         }catch (IOException ex){
             ex.printStackTrace();
