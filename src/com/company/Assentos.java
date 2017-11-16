@@ -59,7 +59,8 @@ public class Assentos {
     }
 
     public synchronized boolean alocaAssentoLivre(User user) throws InterruptedException{
-        for(int i=0;i<this.assentos.length;i++){
+        int i = 0;
+        for(;i<this.assentos.length;i++){
             this.monitor.lockAlocaLivre();
             while (true) {
                 if (this.assentos[i] == 0) {
@@ -78,13 +79,13 @@ public class Assentos {
                         return true;
                     }
                 } else {
-                    this.monitor.unlockAlocaLivre();
-                    this.logManager.alocarAssentoLivre(user,i,this.assentos);
-                    this.notifyAll();
                     break;
                 }
             }
         }
+        this.monitor.unlockAlocaLivre();
+        this.logManager.alocarAssentoLivre(user,i,this.assentos);
+        this.notifyAll();
         return false;
     }
 

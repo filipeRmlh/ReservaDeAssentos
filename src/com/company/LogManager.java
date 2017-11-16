@@ -25,30 +25,39 @@ public class LogManager {
         int opcode = 1;
         String sAssentos = Arrays.toString(assentos);
 //        System.out.println("op"+opcode+"("+user.id+","+sAssentos+")\n");
-        this.logWrite(user,"op"+opcode+"("+user.id+","+sAssentos+", b)\n");
+        this.logWrite(user,"op"+opcode+"("+user.id+","+sAssentos+")\n");
     }
 
     public synchronized void  alocarAssentoLivre(User user, int assento, int[] assentos){
         int opcode = 2;
         String sAssentos = this.arrayAssentos(assentos);
 //        System.out.println("op"+opcode+"("+user.id+","+assento+","+sAssentos+")\n");
-        this.logWrite(user,"op"+opcode+"("+user.id+","+assento+","+sAssentos+", b)\n");
+        this.logWrite(user,"op"+opcode+"("+user.id+","+assento+","+sAssentos+")\n");
     }
 
     public synchronized void  alocarAssentoDado(User user, int assento, int[] assentos){
         int opcode = 3;
         String sAssentos = this.arrayAssentos(assentos);
 //        System.out.println("op"+opcode+"("+user.id+","+assento+","+sAssentos+")\n");
-        this.logWrite(user,"op"+opcode+"("+user.id+","+assento+","+sAssentos+", b)\n");
+        this.logWrite(user,"op"+opcode+"("+user.id+","+assento+","+sAssentos+")\n");
     }
 
     public synchronized void  liberarAssento(User user, int assento, int[] assentos){
         int opcode = 4;
         String sAssentos = this.arrayAssentos(assentos);
 //        System.out.println("op"+opcode+"("+user.id+","+assento+","+sAssentos+")\n");
-        this.logWrite(user,"op"+opcode+"("+user.id+","+assento+","+sAssentos+", b)\n");
+        this.logWrite(user,"op"+opcode+"("+user.id+","+assento+","+sAssentos+")\n");
     }
 
+    public synchronized void logFinal(){
+        String command = "\nfim()\n";
+        try {
+            Files.write(this.log,command.getBytes(),StandardOpenOption.APPEND);
+            notifyAll();
+        }catch (IOException ex){
+            ex.printStackTrace();
+        }
+    }
 
     public synchronized boolean logWrite(User user,String command){
         try {
@@ -71,7 +80,7 @@ public class LogManager {
     public synchronized boolean logInit(int numAssentos){
         String testName = "teste";
         String logName = (this.log.getFileName().toString()+"").replace(".py","");
-        String command = "from "+testName+"_"+logName+" import *\nn = "+numAssentos+"\nb = [1,[0] * n]\n\n";
+        String command = "from "+testName+"_"+logName+" import *\ninit("+numAssentos+")\n\n";
         try {
             Files.write(this.log,command.getBytes());
             Path c = Paths.get("teste_Model.py").toAbsolutePath();
